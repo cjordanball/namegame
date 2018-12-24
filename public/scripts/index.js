@@ -1,8 +1,10 @@
-import Container from './Container.js';
-import { getEmployeeData } from './helpers.js';
+import Container from './components/container.js';
+import getEmployeeData from './helpers.js';
 import employees from '../services/employeeService.js';
 
 window.addEventListener('load', getEmployeeData());
-const test = function() {document.body.appendChild(Container)};
-console.log('torst: ', employees);
+const test = () => {
+	document.body.appendChild(Container)
+};
 document.addEventListener('load', test());
+console.log('employs: ', employees);

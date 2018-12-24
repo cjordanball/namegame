@@ -4,10 +4,12 @@
         "indent": ["error", tab, {"SwitchCase": 1}],
         "no-tabs": "off",
         "comma-dangle": ["error", "never"],
-        "no-console": ["error", allow: ["log"]]
+        "no-console": ["error", allow: ["log"]],
+        "import/extensions": ["error", {"js": "ignorePackages"}]
         },
     "globals": {
         "document": false,
-        "window": false
+        "window": false,
+        "fetch": false
     }
 }
