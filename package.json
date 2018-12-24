@@ -1,0 +1,27 @@
+{
+  "name": "namegame",
+  "version": "1.0.0",
+  "description": "A simple game for memorizing names",
+  "main": "index.js",
+  "scripts": {
+    "start": "lessc ./public/styles/less/styles.less ./public/styles/styles.css && http-server -p 4500",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cjordanball/namegame.git"
+  },
+  "author": "CJB3",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cjordanball/namegame/issues"
+  },
+  "homepage": "https://github.com/cjordanball/namegame#readme",
+  "devDependencies": {
+    "eslint": "^5.11.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "http-server": "^0.11.1",
+    "less": "^3.9.0"
+  }
+}
