@@ -1,0 +1,14 @@
+.container {
+  width: 500px;
+  height: 750px;
+  background-color: grey;
+  border: 2px solid #303030;
+}
+.button {
+  height: 25px;
+  width: 60px;
+  border: 2px silver;
+  border-radius: 5px;
+  background-color: navy;
+  color: white;
+}

@@ -1,0 +1,13 @@
+{
+    "extends": "airbnb-base",
+    "rules": {
+        "indent": ["error", tab, {"SwitchCase": 1}],
+        "no-tabs": "off",
+        "comma-dangle": ["error", "never"],
+        "no-console": ["error", allow: ["log"]]
+        },
+    "globals": {
+        "document": false,
+        "window": false
+    }
+}
