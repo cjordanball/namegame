@@ -5,7 +5,8 @@
         "no-tabs": "off",
         "comma-dangle": ["error", "never"],
         "no-console": ["error", allow: ["log"]],
-        "import/extensions": ["error", {"js": "ignorePackages"}]
+        "import/extensions": ["error", {"js": "ignorePackages"}],
+        "no-plusplus": ["off", { "allowForLoopAfterthoughts": true}],
         },
     "globals": {
         "document": false,
