@@ -21,6 +21,29 @@
   background-color: blue;
   margin: 50px 10px;
 }
+.photo:hover {
+  opacity: 0.2;
+}
+.toolTip {
+  position: relative;
+  display: inline-block;
+}
+.toolTip .toolTipText {
+  opacity: 0.7;
+  visibility: hidden;
+  min-width: 120px;
+  background-color: navy;
+  color: gold;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  border: 2px solid gold;
+  position: absolute;
+  z-index: 1;
+}
+.toolTip:hover .toolTipText {
+  visibility: visible;
+}
 body {
   text-align: center;
 }
