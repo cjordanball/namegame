@@ -1,6 +1,6 @@
 #container {
   width: 100%;
-  max-width: 1000px;
+  max-width: 1200px;
   min-height: 100vh;
   display: inline-block;
 }
@@ -19,6 +19,7 @@
   height: 200px;
   width: 200px;
   background-color: blue;
+  margin: 50px 10px;
 }
 body {
   text-align: center;

@@ -1,6 +1,7 @@
-const Employee = (name, imgURL) => {
+const Employee = (employee) => {
 	const photo = document.createElement('img');
-	photo.src = imgURL;
+	photo.src = employee.headshot.url;
+	photo.dataset.info = JSON.stringify(employee);
 	photo.classList.add('photo');
 	return photo;
 };

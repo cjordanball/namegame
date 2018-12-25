@@ -1,14 +1,47 @@
 import Button from './button.js';
 import EmployeeContainer from './employeeContainer.js';
+import Employee from './employee.js';
 import employees from '../../services/employeeService.js';
+import { choose10 } from '../helpers.js';
 
 const el = document.createElement('div');
 
 const buttonFunc = () => {
-	console.log('employees: ', employees);
+	const preGameDiv = document.getElementById('gameDivID');
+	if (preGameDiv) {
+		el.removeChild(preGameDiv);
+	}
+	const gameDiv = document.createElement('div');
+	gameDiv.id = 'gameDivID';
 	const employeeCont = EmployeeContainer();
-	el.appendChild(employeeCont);
-	console.log('Button!!: ', el);
+	const chosenFew = choose10(employees.length)
+		.map(num => employees[num])
+		.filter(employee => (employee.firstName && employee.lastName && employee.slug
+			&& employee.headshot.url))
+		.slice(0, 5);
+	chosenFew.forEach((employee) => {
+		employeeCont.appendChild(Employee(employee));
+	});
+	gameDiv.appendChild(employeeCont);
+	const needle = chosenFew[Math.floor(Math.random() * 5)];
+	const inquiry = document.createElement('h2');
+	inquiry.innerText = `Who is ${needle.firstName} ${needle.lastName}?`;
+	gameDiv.appendChild(inquiry);
+	gameDiv.addEventListener('click', (e) => {
+		const chosenData = JSON.parse(e.target.dataset.info);
+		if (chosenData.id === needle.id) {
+			console.log('Hurray!');
+		} else {
+			console.log('Sorry!');
+		}
+	});
+
+
+	if (el.contains(gameDiv)) {
+		console.log('child');
+	} else {
+		el.appendChild(gameDiv);
+	}
 };
 
 const Container = () => {
