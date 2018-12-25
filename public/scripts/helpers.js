@@ -3,8 +3,6 @@ import employees from '../services/employeeService.js';
 import data from '../data.js';
 
 const getEmployeeData = () => {
-	console.log('data: ', data);
-	console.log(data.people);
 	employees.push(...data.people);
 	// fetch(configObj.willowTreeURL)
 	// 	.then(res => res.json())
