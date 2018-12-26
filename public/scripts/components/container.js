@@ -11,14 +11,10 @@ const el = document.createElement('div');
 let currentList;
 
 const hintSubmit = () => {
-	console.log('inHintSubmit');
 	const inputField = document.querySelector('input');
-	const pattern = /[^\w'.,?!]/;
-	console.log('iFVal: ', inputField.value);
-	console.log(pattern.test(inputField.value));
+	const pattern = /[^\w'.,?!\x20]/;
 	if (pattern.test(inputField.value)) {
 		inputField.value = '';
-		console.log('Alert');
 		window.alert('Sorry, the hint may contain only letters, numbers, commas, apostrophes and ending punctuation.  Please enter a new hint.');
 		return;
 	}
@@ -28,8 +24,6 @@ const hintSubmit = () => {
 };
 
 function buttonFunc(e, proceed = false) {
-	console.log('started: ', gameData.gameStarted);
-	console.log('proceed: ', proceed);
 	if (!gameData.gameStarted || proceed) {
 		Array.from(document.querySelectorAll('#hintInputForm')).forEach(input => el.removeChild(input));
 		gameData.gameStarted = true;
@@ -73,7 +67,7 @@ function buttonFunc(e, proceed = false) {
 					document.getElementById('currentScore').innerText = scoreData.current;
 					document.getElementById('totalScore').innerText = scoreData.total;
 				}
-				const hintInputForm = InputForm('hintInputForm', hintSubmit);
+				const hintInputForm = InputForm('hintInputForm', chosenData.hint, hintSubmit);
 				el.appendChild(hintInputForm);
 				// buttonFunc();
 				console.log('Hurray!');
