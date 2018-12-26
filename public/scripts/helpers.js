@@ -11,6 +11,9 @@ const getEmployeeData = () => {
 		.then(res => res.json())
 		.then((jsonRes) => {
 			employees.push(...jsonRes);
+		})
+		.catch((err) => {
+			console.log('ERR: ', err);
 		});
 };
 
