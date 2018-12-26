@@ -21,10 +21,17 @@ input {
   height: 40px;
   border-radius: 10px;
 }
+@media (max-width: 515px) {
+  .topBar {
+    height: 150px;
+  }
+}
 .button {
   height: 35px;
-  margin: 20px 50px;
-  width: 150px;
+  margin: 20px 5vw;
+  width: 20vw;
+  max-width: 200px;
+  min-width: 115px;
   border: 2px silver;
   border-radius: 5px;
   background-color: navy;
@@ -34,10 +41,12 @@ input {
   opacity: 0.3;
 }
 .photo {
-  height: 200px;
-  width: 200px;
+  height: 15vw;
+  width: 15vw;
+  max-height: 220px;
+  max-width: 220px;
   background-color: #ddd;
-  margin: 50px 10px;
+  margin: 50px 2vw;
 }
 .toolTip {
   position: relative;
@@ -59,6 +68,11 @@ input {
 .toolTip:hover .toolTipText {
   visibility: visible;
 }
+@media (min-width: 1260px) {
+  .photo {
+    margin: 50px 10px;
+  }
+}
 #scoreDisplay {
   width: 100%;
 }
@@ -67,6 +81,11 @@ input {
   display: inline-block;
   padding-bottom: 20px;
   font-size: 36px;
+}
+@media (max-width: 900px) {
+  .scoreSections {
+    font-size: 3vw;
+  }
 }
 body {
   text-align: center;
