@@ -17,7 +17,7 @@ const ScoreDisplay = () => {
 	currentScoreHeading.classList.add('scoreHeading');
 	totalScoreHeading.classList.add('scoreHeading');
 	totalScoreHeading.innerText = 'Cumulative Score';
-	currentScoreHeading.innerText = 'Current Score';
+	currentScoreHeading.innerText = 'Points Remaining This Game';
 
 	currentScoreBox.classList.add('scoreBox');
 	currentScoreBox.id = 'currentScore';
