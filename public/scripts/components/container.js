@@ -35,6 +35,7 @@ function buttonFunc(e, proceed = false) {
 			el.removeChild(farewellSection);
 		}
 		gameData.gameStarted = true;
+		document.getElementById('currentOnlyButton').classList.add('faded');
 		if (gameData.keepScore) {
 			scoreData.current = 5;
 			document.getElementById('currentScore').innerText = scoreData.current;
@@ -102,7 +103,7 @@ function buttonFunc(e, proceed = false) {
 		gameData.gameStarted = false;
 		gameData.keepScore = false;
 		scoreButton.classList.remove('faded');
-
+		document.getElementById('currentOnlyButton').classList.remove('faded');
 		el.removeChild(gamePlay);
 		if (hintForm) {
 			el.removeChild(hintForm);
@@ -116,6 +117,9 @@ function buttonFunc(e, proceed = false) {
 
 
 const removeOld = () => {
+	if (gameData.gameStarted) {
+		return;
+	}
 	if (!currentList) {
 		currentList = employees.filter(employee => employee.jobTitle);
 	}
