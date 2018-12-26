@@ -1,14 +1,17 @@
-import configObj from './config.js';
 import employees from '../services/employeeService.js';
-import data from '../data.js';
+// uncomment the following line if using local JSON data
+// import data from '../data.js';
+
+const willowTreeURL = 'https://willowtreeapps.com/api/v1.0/profiles/';
 
 const getEmployeeData = () => {
-	employees.push(...data.people);
-	// fetch(configObj.willowTreeURL)
-	// 	.then(res => res.json())
-	// 	.then((jsonRes) => {
-	// 		employees.push(...jsonRes);
-	// 	});
+	// the following can be uncommented to use the JSON data from a local file
+	// employees.push(...data.people);
+	fetch(willowTreeURL)
+		.then(res => res.json())
+		.then((jsonRes) => {
+			employees.push(...jsonRes);
+		});
 };
 
 export const choose10 = (arrLength) => {

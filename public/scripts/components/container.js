@@ -10,6 +10,7 @@ import Farewell from './farewell.js';
 const el = document.createElement('div');
 let currentList;
 
+// hintSubmit checks the string typed in by the user into the mnemonic hint input box
 const hintSubmit = () => {
 	const inputField = document.querySelector('input');
 	const pattern = /[^\w'.,?!\x20]/;
@@ -23,8 +24,11 @@ const hintSubmit = () => {
 	buttonFunc(null, true);
 };
 
+// this function is the heart of the application, and defines what happens when the play button is pressed.
 function buttonFunc(y, proceed = false) {
 	gameData.gameCompleted = false;
+	// the second evaluation is necessary for when the game is started and the user hits the go-on button
+	// if this is false, it means the user has clicked on the button to quit the game.
 	if (!gameData.gameStarted || proceed) {
 		if (gameData.keepScore === true) {
 			document.getElementById('keepScoreButton').classList.add('faded');
@@ -56,12 +60,11 @@ function buttonFunc(y, proceed = false) {
 			.filter(employee => (employee.firstName && employee.lastName && employee.slug
 			&& employee.headshot.url))
 			.slice(0, 5);
-		if(gameData.mode === 'faces') {
+		if (gameData.mode === 'faces') {
 			chosenFew.forEach((employee) => {
 				employeeCont.appendChild(Employee(employee));
 			});
 			gameDiv.appendChild(employeeCont);
-			// const needle = chosenFew[Math.floor(Math.random() * 5)];
 			employeeData.selectedEmployee = chosenFew[Math.floor(Math.random() * 5)];
 			const inquiry = document.createElement('h2');
 			inquiry.innerText = `Who is ${employeeData.selectedEmployee.firstName} ${employeeData.selectedEmployee.lastName}?`;
@@ -226,7 +229,6 @@ const Container = () => {
 	buttonDiv.appendChild(button4);
 	el.appendChild(buttonDiv);
 	el.appendChild(button1);
-	// el.appendChild(InputForm);
 	if (gameData.keepScore) {
 		el.appendChild(ScoreDisplay);
 	}
