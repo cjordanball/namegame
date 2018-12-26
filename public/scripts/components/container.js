@@ -11,7 +11,17 @@ const el = document.createElement('div');
 let currentList;
 
 const hintSubmit = () => {
+	console.log('inHintSubmit');
 	const inputField = document.querySelector('input');
+	const pattern = /[^\w'.,?!]/;
+	console.log('iFVal: ', inputField.value);
+	console.log(pattern.test(inputField.value));
+	if (pattern.test(inputField.value)) {
+		inputField.value = '';
+		console.log('Alert');
+		window.alert('Sorry, the hint may contain only letters, numbers, commas, apostrophes and ending punctuation.  Please enter a new hint.');
+		return;
+	}
 	employeeData.selectedEmployee.hint = inputField.value;
 	inputField.value = '';
 	buttonFunc(null, true);
