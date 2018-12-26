@@ -23,7 +23,7 @@ const hintSubmit = () => {
 	buttonFunc(null, true);
 };
 
-function buttonFunc(e, proceed = false) {
+function buttonFunc(y, proceed = false) {
 	gameData.gameCompleted = false;
 	if (!gameData.gameStarted || proceed) {
 		if (gameData.keepScore === true) {
@@ -35,6 +35,7 @@ function buttonFunc(e, proceed = false) {
 			el.removeChild(farewellSection);
 		}
 		gameData.gameStarted = true;
+		document.getElementById('playModeButton').classList.add('faded');
 		document.getElementById('currentOnlyButton').classList.add('faded');
 		if (gameData.keepScore) {
 			scoreData.current = 5;
@@ -55,37 +56,67 @@ function buttonFunc(e, proceed = false) {
 			.filter(employee => (employee.firstName && employee.lastName && employee.slug
 			&& employee.headshot.url))
 			.slice(0, 5);
-		chosenFew.forEach((employee) => {
-			employeeCont.appendChild(Employee(employee));
-		});
-		gameDiv.appendChild(employeeCont);
-		// const needle = chosenFew[Math.floor(Math.random() * 5)];
-		employeeData.selectedEmployee = chosenFew[Math.floor(Math.random() * 5)];
-		const inquiry = document.createElement('h2');
-		inquiry.innerText = `Who is ${employeeData.selectedEmployee.firstName} ${employeeData.selectedEmployee.lastName}?`;
-		gameDiv.appendChild(inquiry);
-		gameDiv.addEventListener('click', (e) => {
-			const chosenData = JSON.parse(e.target.dataset.info);
-			if (chosenData.id === employeeData.selectedEmployee.id) {
-				Array.from(document.querySelectorAll('img'))
-					.forEach(pic => pic.classList.add('clickedFail'));
-				e.target.classList.remove('clickedFail');
-				if (gameData.keepScore) {
-					scoreData.total += scoreData.current;
-					scoreData.current = 0;
-					document.getElementById('currentScore').innerText = scoreData.current;
-					document.getElementById('totalScore').innerText = scoreData.total;
+		if(gameData.mode === 'faces') {
+			chosenFew.forEach((employee) => {
+				employeeCont.appendChild(Employee(employee));
+			});
+			gameDiv.appendChild(employeeCont);
+			// const needle = chosenFew[Math.floor(Math.random() * 5)];
+			employeeData.selectedEmployee = chosenFew[Math.floor(Math.random() * 5)];
+			const inquiry = document.createElement('h2');
+			inquiry.innerText = `Who is ${employeeData.selectedEmployee.firstName} ${employeeData.selectedEmployee.lastName}?`;
+			gameDiv.appendChild(inquiry);
+			gameDiv.addEventListener('click', (e) => {
+				const chosenData = JSON.parse(e.target.dataset.info);
+				if (chosenData.id === employeeData.selectedEmployee.id) {
+					Array.from(document.querySelectorAll('img'))
+						.forEach(pic => pic.classList.add('clickedFail'));
+					e.target.classList.remove('clickedFail');
+					if (gameData.keepScore) {
+						scoreData.total += scoreData.current;
+						scoreData.current = 0;
+						document.getElementById('currentScore').innerText = scoreData.current;
+						document.getElementById('totalScore').innerText = scoreData.total;
+					}
+					const hintInputForm = InputForm('hintInputForm', chosenData.hint, hintSubmit);
+					el.appendChild(hintInputForm);
+				} else {
+					e.target.classList.add('clickedFail');
+					if (gameData.keepScore) {
+						scoreData.current = Math.max(0, --scoreData.current);
+						document.getElementById('currentScore').innerText = scoreData.current;
+					}
 				}
-				const hintInputForm = InputForm('hintInputForm', chosenData.hint, hintSubmit);
-				el.appendChild(hintInputForm);
-			} else {
-				e.target.classList.add('clickedFail');
-				if (gameData.keepScore) {
-					scoreData.current = Math.max(0, --scoreData.current);
-					document.getElementById('currentScore').innerText = scoreData.current;
+			});
+		} else if (gameData.mode === 'names') {
+			document.getElementById('keepScoreButton').classList.add('faded');
+			employeeData.selectedEmployee = chosenFew[Math.floor(Math.random() * 5)];
+			const inquiry = document.createElement('h2');
+			inquiry.innerText = 'Whose mug is this?';
+			employeeCont.appendChild(Employee(employeeData.selectedEmployee));
+			gameDiv.appendChild(employeeCont);
+			gameDiv.appendChild(inquiry);
+
+			const nameContainer = document.createElement('div');
+			nameContainer.classList.add('nameList');
+			chosenFew.forEach((employee) => {
+				const textSpan = document.createElement('span');
+				textSpan.dataset.info = JSON.stringify(employee);
+				textSpan.classList.add('nameEntry');
+				const textNode = document.createTextNode(`${employee.firstName} ${employee.lastName}`);
+				textSpan.appendChild(textNode);
+				nameContainer.appendChild(textSpan);
+			});
+			gameDiv.appendChild(nameContainer);
+			gameDiv.addEventListener('click', (e) => {
+				const chosenData = JSON.parse(e.target.dataset.info);
+				if (chosenData.id === employeeData.selectedEmployee.id) {
+					buttonFunc(null, true);
+				} else {
+					e.target.classList.add('red');
 				}
-			}
-		});
+			});
+		}
 
 		if (!el.contains(gameDiv)) {
 			el.insertBefore(gameDiv, document.getElementById('scoreDisplay'));
@@ -111,6 +142,7 @@ function buttonFunc(e, proceed = false) {
 			crrtScore.innerText = 0;
 			ttlScore.innerText = 0;
 		}
+		document.getElementById('playModeButton').classList.remove('faded');
 		document.getElementById('currentOnlyButton').classList.remove('faded');
 		el.removeChild(gamePlay);
 		if (hintForm) {
@@ -139,7 +171,7 @@ const removeOld = () => {
 };
 
 const scoreKeeper = () => {
-	if (gameData.gameCompleted) {
+	if (gameData.gameCompleted || gameData.mode === 'names') {
 		return;
 	}
 	const hotNode = document.getElementById('scoreDisplay');
@@ -166,13 +198,21 @@ const scoreKeeper = () => {
 	}
 };
 
+const playModeChanger = () => {
+	if (gameData.gameStarted) {
+		return;
+	}
+	gameData.toggleMode();
+	document.getElementById('playModeButton').innerText = gameData.mode === 'faces' ? 'Faces to Name' : 'Names to Face';
+};
+
 const Container = () => {
 	const headline = document.createElement('h1');
 	const buttonDiv = document.createElement('div');
 	buttonDiv.classList.add('topBar');
 	const button1 = Button('Begin', 'beginPlayButton', buttonFunc);
 	const button2 = Button('Current Staff Only', 'currentOnlyButton', removeOld);
-	const button3 = Button('Faces to Name', 'playModeButton', gameData.toggleMode);
+	const button3 = Button('Faces to Name', 'playModeButton', playModeChanger);
 	const button4 = Button('Keep Score', 'keepScoreButton', scoreKeeper);
 
 	el.id = 'container';
