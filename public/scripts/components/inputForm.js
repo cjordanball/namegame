@@ -1,5 +1,3 @@
-import { employeeData } from '../../services/employeeService.js';
-
 const InputForm = (id, value, cb) => {
 	const form = document.createElement('div');
 	const hintInput = document.createElement('input');
