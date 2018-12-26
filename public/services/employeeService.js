@@ -10,16 +10,16 @@ export const scoreData = {
 };
 
 export const gameData = {
-	mode: 'nameToFaces',
+	mode: 'faces',
 	keepScore: false,
 	allEmployees: true,
 	gameStarted: false,
 	gameCompleted: false,
 	toggleMode() {
-		if (this.mode === 'nameToFaces') {
-			this.mode = 'faceToNames';
+		if (this.mode === 'faces') {
+			this.mode = 'names';
 		} else {
-			this.mode = 'nameToFaces';
+			this.mode = 'faces';
 		}
 	},
 	toggleScoreKeeping() {
