@@ -24,8 +24,16 @@ const hintSubmit = () => {
 };
 
 function buttonFunc(e, proceed = false) {
+	gameData.gameCompleted = false;
 	if (!gameData.gameStarted || proceed) {
+		if (gameData.keepScore === true) {
+			document.getElementById('keepScoreButton').classList.add('faded');
+		}
 		Array.from(document.querySelectorAll('#hintInputForm')).forEach(input => el.removeChild(input));
+		const farewellSection = document.getElementById('farewellDiv');
+		if (farewellSection) {
+			el.removeChild(farewellSection);
+		}
 		gameData.gameStarted = true;
 		if (gameData.keepScore) {
 			scoreData.current = 5;
@@ -69,25 +77,22 @@ function buttonFunc(e, proceed = false) {
 				}
 				const hintInputForm = InputForm('hintInputForm', chosenData.hint, hintSubmit);
 				el.appendChild(hintInputForm);
-				// buttonFunc();
-				console.log('Hurray!');
 			} else {
 				e.target.classList.add('clickedFail');
 				if (gameData.keepScore) {
 					scoreData.current = Math.max(0, --scoreData.current);
 					document.getElementById('currentScore').innerText = scoreData.current;
 				}
-				console.log('Sorry!');
 			}
 		});
 
 		// el.replaceChild(ScoreDisplay, document.getElementById('scoreDisplay'));
 		if (el.contains(gameDiv)) {
-			console.log('child');
 		} else {
 			el.insertBefore(gameDiv, document.getElementById('scoreDisplay'));
 		}
 	} else {
+		gameData.gameCompleted = true;
 		const gamePlay = document.getElementById('gameDivID');
 		const hintForm = document.getElementById('hintInputForm');
 		const endButton = document.getElementById('beginPlayButton');
@@ -96,7 +101,7 @@ function buttonFunc(e, proceed = false) {
 		endButton.innerText = 'Begin';
 		gameData.gameStarted = false;
 		gameData.keepScore = false;
-		scoreButton.innerText = 'Keep Score';
+		scoreButton.classList.remove('faded');
 
 		el.removeChild(gamePlay);
 		if (hintForm) {
@@ -106,7 +111,6 @@ function buttonFunc(e, proceed = false) {
 			el.removeChild(pointsForm);
 		}
 		el.appendChild(Farewell());
-		console.log('let\'s stop');
 	}
 }
 
@@ -114,7 +118,6 @@ function buttonFunc(e, proceed = false) {
 const removeOld = () => {
 	if (!currentList) {
 		currentList = employees.filter(employee => employee.jobTitle);
-		console.log('currentList: ', currentList.length);
 	}
 	const hotButton = document.getElementById('currentOnlyButton');
 	gameData.toggleEmployeeList();
@@ -125,17 +128,31 @@ const removeOld = () => {
 };
 
 const scoreKeeper = () => {
+	if (gameData.gameCompleted) {
+		return;
+	}
 	const hotNode = document.getElementById('scoreDisplay');
 	const hotButton = document.getElementById('keepScoreButton');
+	if (gameData.keepScore && gameData.gameStarted) {
+		hotButton.classList.add('faded');
+		window.alert('Once started, scorekeeping cannot be discontinued during game.');
+		return;
+	}
 	if (gameData.keepScore) {
-		gameData.total = 0;
-		gameData.current = 0;
 		el.removeChild(hotNode);
+	} else if (!gameData.keepScore) {
+		el.appendChild(ScoreDisplay);
+		if (gameData.gameStarted) {
+			hotButton.classList.add('faded');
+		}
 	} else {
 		el.appendChild(ScoreDisplay);
 	}
 	gameData.toggleScoreKeeping();
-	hotButton.innerText = gameData.keepScore ? 'Turn off Score' : 'Keep Score';
+	hotButton.innerText = gameData.keepScore || gameData.gameStarted ? 'Turn off Score' : 'Keep Score';
+	if (gameData.gameCompleted) {
+		hotButton.innerText = 'Keep Score';
+	}
 };
 
 const Container = () => {

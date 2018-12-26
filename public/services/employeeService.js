@@ -14,17 +14,16 @@ export const gameData = {
 	keepScore: false,
 	allEmployees: true,
 	gameStarted: false,
+	gameCompleted: false,
 	toggleMode() {
 		if (this.mode === 'nameToFaces') {
 			this.mode = 'faceToNames';
 		} else {
 			this.mode = 'nameToFaces';
 		}
-		console.log('mode: ', this.mode);
 	},
 	toggleScoreKeeping() {
 		this.keepScore = !this.keepScore;
-		console.log('keepscore: ', this.keepScore);
 	},
 	toggleEmployeeList() {
 		this.allEmployees = !this.allEmployees;

@@ -30,6 +30,9 @@ input {
   background-color: navy;
   color: white;
 }
+.faded {
+  opacity: 0.3;
+}
 .photo {
   height: 200px;
   width: 200px;
