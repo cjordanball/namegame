@@ -33,7 +33,7 @@ input {
 .photo {
   height: 200px;
   width: 200px;
-  background-color: #fff;
+  background-color: #ddd;
   margin: 50px 10px;
 }
 .toolTip {
