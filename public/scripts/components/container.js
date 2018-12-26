@@ -87,22 +87,30 @@ function buttonFunc(e, proceed = false) {
 			}
 		});
 
-		// el.replaceChild(ScoreDisplay, document.getElementById('scoreDisplay'));
-		if (el.contains(gameDiv)) {
-		} else {
+		if (!el.contains(gameDiv)) {
 			el.insertBefore(gameDiv, document.getElementById('scoreDisplay'));
 		}
 	} else {
+		el.appendChild(Farewell());
 		gameData.gameCompleted = true;
 		const gamePlay = document.getElementById('gameDivID');
 		const hintForm = document.getElementById('hintInputForm');
 		const endButton = document.getElementById('beginPlayButton');
 		const pointsForm = document.getElementById('scoreDisplay');
 		const scoreButton = document.getElementById('keepScoreButton');
-		endButton.innerText = 'Begin';
+		endButton.innerText = 'Play Again';
 		gameData.gameStarted = false;
 		gameData.keepScore = false;
 		scoreButton.classList.remove('faded');
+		scoreButton.innerText = 'Keep Score';
+		scoreData.current = 0;
+		scoreData.total = 0;
+		const crrtScore = document.getElementById('currentScore');
+		const ttlScore = document.getElementById('totalScore');
+		if (crrtScore && ttlScore) {
+			crrtScore.innerText = 0;
+			ttlScore.innerText = 0;
+		}
 		document.getElementById('currentOnlyButton').classList.remove('faded');
 		el.removeChild(gamePlay);
 		if (hintForm) {
@@ -111,7 +119,6 @@ function buttonFunc(e, proceed = false) {
 		if (pointsForm) {
 			el.removeChild(pointsForm);
 		}
-		el.appendChild(Farewell());
 	}
 }
 
