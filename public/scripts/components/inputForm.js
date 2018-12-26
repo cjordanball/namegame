@@ -1,22 +1,19 @@
 import { employeeData } from '../../services/employeeService.js';
 
-const InputForm = () => {
+const InputForm = (id, cb) => {
 	const form = document.createElement('div');
 	const hintInput = document.createElement('input');
 	const submitInput = document.createElement('button');
+
+	form.id = id;
 
 	hintInput.type = 'text';
 	hintInput.classList.add('hintInput');
 	hintInput.placeholder = 'Enter a mnemonic phrase to help remember';
 
-	const hintSubmit = () => {
-		employeeData.selectedEmployee.hint = hintInput.value;
-		console.log('Hint Submitted: ', hintInput.value);
-		console.log('sE: ', employeeData.selectedEmployee);
-	};
-
-	submitInput.innerText = 'Save Hint';
-	submitInput.addEventListener('click', hintSubmit);
+	submitInput.innerText = 'Save & Continue';
+	submitInput.classList.add('button');
+	submitInput.addEventListener('click', cb);
 
 	form.appendChild(hintInput);
 	form.appendChild(submitInput);
@@ -24,4 +21,4 @@ const InputForm = () => {
 	return form;
 };
 
-export default InputForm();
+export default InputForm;
