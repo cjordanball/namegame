@@ -1,20 +1,21 @@
-import employees from '../services/employeeService.js';
+export const employees = [];
+
 // uncomment the following line if using local JSON data
-// import data from '../data.js';
+import data from '../data.js';
 
 const willowTreeURL = 'https://willowtreeapps.com/api/v1.0/profiles/';
 
 const getEmployeeData = () => {
 	// the following can be uncommented to use the JSON data from a local file
-	// employees.push(...data.people);
-	fetch(willowTreeURL)
-		.then(res => res.json())
-		.then((jsonRes) => {
-			employees.push(...jsonRes);
-		})
-		.catch((err) => {
-			console.log('ERR: ', err);
-		});
+	employees.push(...data.people);
+	// fetch(willowTreeURL)
+	// 	.then(res => res.json())
+	// 	.then((jsonRes) => {
+	// 		employees.push(...jsonRes);
+	// 	})
+	// 	.catch((err) => {
+	// 		console.log('ERR: ', err);
+	// 	});
 };
 
 export const choose10 = (arrLength) => {
