@@ -1,63 +1,177 @@
 import Button from './button.js';
-import EmployeeContainer from './employeeContainer.js';
-import Employee from './employee.js';
-import { employeeData } from '../../services/employeeService.js';
-import { employees, choose10 } from '../helpers.js';
-import InputForm from './inputForm.js';
-import { ScoreDisplay } from './scoreDisplay.js';
+import { employees } from '../helpers.js';
+// import EmployeeContainer from './employeeContainer.js';
+import { getChosen } from './employee.js';
+// import { employeeData } from '../../services/employeeService.js';
+// import InputForm from './inputForm.js';
+import { ScoreDisplay, toggleScore } from './scoreDisplay.js';
 import Farewell from './farewell.js';
 import FacesGameBoard from './facesGameBoard.js';
+// import NamesGameBoard from './namesGameBoard.js';
+// import { gameData, gameFunctions } from './gameHelpers.js';
 
-const el = document.createElement('div');
-let currentList;
+let employeeSelectedList;
 const gameData = {
 	mode: 'faces',
 	gameStarted: false,
 	allEmployees: true,
-	gameCompleted: false,
-	toggleMode() {
-		if (this.mode === 'faces') {
-			this.mode = 'names';
-		} else {
-			this.mode = 'faces';
-		}
-	},
+	gameCompleted: false
+};
 
-	toggleEmployeeList() {
-		this.allEmployees = !this.allEmployees;
+const toggleMode = () => {
+	const modeButton = document.getElementById('playModeButton');
+	const scoreButton = document.getElementById('toggleScoreButton');
+	if (gameData.mode === 'faces') {
+		gameData.mode = 'names';
+		ScoreDisplay.allowScore = false;
+		scoreButton.classList.add('faded');
+		modeButton.innerText = 'Names to Face';
+	} else {
+		gameData.mode = 'faces';
+		modeButton.innerText = 'Faces to Names';
+		scoreButton.classList.remove('faded');
+		ScoreDisplay.allowScore = true;
 	}
 };
-// hintSubmit checks the string typed in by the user into the mnemonic hint input box
-const hintSubmit = () => {
-	const inputField = document.querySelector('input');
-	const pattern = /[^\w'.,?!\x20]/;
-	if (pattern.test(inputField.value)) {
-		inputField.value = '';
-		window.alert('Sorry, the hint may contain only letters, numbers, commas, apostrophes and ending punctuation.  Please enter a new hint.');
+
+const toggleEmployeeList = () => {
+	if (gameData.gameStarted) {
 		return;
 	}
-	employeeData.selectedEmployee.hint = inputField.value;
-	inputField.value = '';
-	beginPlay(true);
+	const allEmplButton = document.getElementById('currentOnlyButton');
+	gameData.allEmployees = !gameData.allEmployees;
+	allEmplButton.innerText = gameData.allEmployees ? 'Switch to Current Staff Only' : 'Switch to All Staff';
+	employeeSelectedList = gameData.allEmployees ? employees : employees.filter(employee => employee.jobTitle);
+	console.log('esl: ', employeeSelectedList);
 };
 
-// this function sets up the game, and defines what happens when the play button is pressed.
-const beginPlay = (proceed = false) => {
-	const chosenFew = getChosen();
-	gameData.gameStarted = true;
-	if (gameData.mode === 'faces') {
-		document.getElementById('gameDivID').appendChild(FacesGameBoard(chosenFew));
-		console.log('faces!');
+const togglePlay = () => {
+	console.log('begin');
+	gameData.gameStarted = !gameData.gameStarted;
+	const chosen = getChosen();
+	const playButton = document.getElementById('togglePlayButton');
+	const gameDiv = document.getElementById('gameDivID');
+	const faceBoard = FacesGameBoard(chosen);
+	document.getElementById('playModeButton').classList.toggle('faded');
+	document.getElementById('currentOnlyButton').classList.toggle('faded');
+	if (gameData.gameStarted) {
+		if (gameDiv.children.length) {
+			gameDiv.replaceChild(faceBoard, gameDiv.children[0]);
+		} else {
+			gameDiv.appendChild(faceBoard);
+		}
+		playButton.innerText = 'Quit';
+	} else {
+		console.log('id: ', gameDiv.children);
+		playButton.innerText = 'Begin';
+		gameDiv.replaceChild(Farewell(), gameDiv.children[0]);
 	}
-
+	// gameHelpers.toggleOnOff();
+	// const chosenFew = getChosen();
+	// const gameBoard = document.getElementById('gameDivID');
+	// if (gameData.mode === 'faces') {
+	// 	gameBoard.appendChild(FacesGameBoard(chosenFew));
+	// } else if (gameData.mode === 'names') {
+	// 	document.getElementById('keepScoreButton').classList.add('faded');
+	// 	gameBoard.appendChild(NamesGameBoard(chosenFew));
 };
 
-const getChosen = () => {
-	return choose10(employees.length)
-		.map(num => employees[num])
-		.filter(employee => (employee.firstName && employee.lastName && employee.slug && employee.headshot.url))
-		.slice(0, 5);
-}
+
+
+
+
+// Object.assign(gameHelpers, {
+// 	// this function sets up the game, and defines what happens when the play button is pressed.
+// 	beginPlay(proceed = false) {
+// 		console.log('begin');
+// 		gameData.gameStarted = true;
+// 		document.getElementById('playModeButton').classList.add('faded');
+// 		document.getElementById('currentOnlyButton').classList.add('faded');
+// 		gameHelpers.toggleOnOff();
+// 		const chosenFew = getChosen();
+// 		const gameBoard = document.getElementById('gameDivID');
+// 		if (gameData.mode === 'faces') {
+// 			gameBoard.appendChild(FacesGameBoard(chosenFew));
+// 		} else if (gameData.mode === 'names') {
+// 			document.getElementById('keepScoreButton').classList.add('faded');
+// 			gameBoard.appendChild(NamesGameBoard(chosenFew));
+// 		}
+
+	// },
+	// quitPlay() {
+	// 	console.log('QUIT!');
+	// },
+	// toggleOnOff() {
+	// 	console.log('toggling');
+	// 	if (gameData.gameStarted) {
+	// 		el.replaceChild(document.getElementById('togglePlayButton'), buttonOff);
+	// 	} else {
+	// 		el.replaceChild(document.getElementById('quitButton'), buttonOn);
+	// 	}
+	// },
+	//
+	// playModeChanger() {
+	// 	if (gameData.gameStarted) {
+	// 		return;
+	// 	}
+	// 	gameData.toggleMode();
+	// 	document.getElementById('playModeButton').innerText = gameData.mode === 'faces' ? 'Faces to Name' : 'Names to Face';
+	// },
+	// scoreKeeper() {
+	// 	console.log('scoreKeeper');
+	// 	if (gameData.gameCompleted || gameData.mode === 'names') {
+// 			return;
+// 		}
+// 		const hotNode = document.getElementById('scoreDisplay');
+// 		const hotButton = document.getElementById('keepScoreButton');
+// 		if (ScoreDisplay.keepScore && gameData.gameStarted) {
+// 			hotButton.classList.add('faded');
+// 			window.alert('Once started, scorekeeping cannot be discontinued during game.');
+// 			return;
+// 		}
+// 		if (ScoreDisplay.keepScore) {
+// 			el.removeChild(hotNode);
+// 		} else if (!ScoreDisplay.keepScore) {
+// 			el.appendChild(ScoreDisplay.getScoreDisplay());
+// 			if (gameData.gameStarted) {
+// 				hotButton.classList.add('faded');
+// 			}
+// 		} else {
+// 			el.appendChild(ScoreDisplay);
+// 		}
+// 		ScoreDisplay.toggleScoreKeeping();
+// 		hotButton.innerText = ScoreDisplay.keepScore || gameData.gameStarted ? 'Turn off Score' : 'Keep Score';
+// 		if (gameData.gameCompleted) {
+// 			hotButton.innerText = 'Keep Score';
+// 		}
+// 	}
+// });
+
+
+
+
+
+
+
+// hintSubmit checks the string typed in by the user into the mnemonic hint input box
+// const hintSubmit = (selectedEmployee) => {
+// 	console.log(employees);
+// 	console.log('SE: ', selectedEmployee);
+// 	const inputField = document.querySelector('input');
+// 	const pattern = /[^\w'.,?!\x20]/;
+// 	if (pattern.test(inputField.value)) {
+// 		inputField.value = '';
+// 		window.alert('Sorry, the hint may contain only letters, numbers, commas, apostrophes and ending punctuation.  Please enter a new hint.');
+// 		return;
+// 	}
+// 	selectedEmployee.hint = inputField.value;
+// 	inputField.value = '';
+// 	beginPlay(true);
+// };
+
+
+
+
 // 	gameData.gameCompleted = false;
 // 	// the second evaluation is necessary for when the game is started and the user hits the go-on button
 // 	// if this is false, it means the user has clicked on the button to quit the game.
@@ -77,7 +191,7 @@ const getChosen = () => {
 // 			ScoreDisplay.scoreData.current = 5;
 // 			ScoreDisplay.updateScoreDisplay();
 // 		}
-// 		const button = document.getElementById('beginPlayButton');
+// 		const button = document.getElementById('togglePlayButton');
 //
 // 		button.innerText = 'Stop Playing';
 // 		const preGameDiv = document.getElementById('gameDivID');
@@ -159,7 +273,7 @@ const getChosen = () => {
 // 		gameData.gameCompleted = true;
 // 		const gamePlay = document.getElementById('gameDivID');
 // 		const hintForm = document.getElementById('hintInputForm');
-// 		const endButton = document.getElementById('beginPlayButton');
+// 		const endButton = document.getElementById('togglePlayButton');
 // 		const pointsForm = document.getElementById('scoreDisplay');
 // 		const scoreButton = document.getElementById('keepScoreButton');
 // 		endButton.innerText = 'Play Again';
@@ -189,84 +303,33 @@ const getChosen = () => {
 // }
 
 
-const removeOld = () => {
-	if (gameData.gameStarted) {
-		return;
-	}
-	if (!currentList) {
-		currentList = employees.filter(employee => employee.jobTitle);
-	}
-	const hotButton = document.getElementById('currentOnlyButton');
-	gameData.toggleEmployeeList();
-	hotButton.innerText = gameData.allEmployees ? 'Current Staff Only' : 'All Staff';
-	if (gameData.gameStarted) {
-		beginPlay(null, false);
-	}
-};
-
-const scoreKeeper = () => {
-	console.log('scoreKeeper');
-	if (gameData.gameCompleted || gameData.mode === 'names') {
-		return;
-	}
-	const hotNode = document.getElementById('scoreDisplay');
-	const hotButton = document.getElementById('keepScoreButton');
-	if (ScoreDisplay.keepScore && gameData.gameStarted) {
-		hotButton.classList.add('faded');
-		window.alert('Once started, scorekeeping cannot be discontinued during game.');
-		return;
-	}
-	if (ScoreDisplay.keepScore) {
-		el.removeChild(hotNode);
-	} else if (!ScoreDisplay.keepScore) {
-		el.appendChild(ScoreDisplay.getScoreDisplay());
-		if (gameData.gameStarted) {
-			hotButton.classList.add('faded');
-		}
-	} else {
-		el.appendChild(ScoreDisplay);
-	}
-	ScoreDisplay.toggleScoreKeeping();
-	hotButton.innerText = ScoreDisplay.keepScore || gameData.gameStarted ? 'Turn off Score' : 'Keep Score';
-	if (gameData.gameCompleted) {
-		hotButton.innerText = 'Keep Score';
-	}
-};
-
-const playModeChanger = () => {
-	if (gameData.gameStarted) {
-		return;
-	}
-	gameData.toggleMode();
-	document.getElementById('playModeButton').innerText = gameData.mode === 'faces' ? 'Faces to Name' : 'Names to Face';
-};
-
 const Container = () => {
+	const containerElement = document.createElement('div');
 	const headline = document.createElement('h1');
-	const buttonDiv = document.createElement('div');
-	buttonDiv.classList.add('topBar');
-	const button1 = Button('Begin', 'beginPlayButton', beginPlay);
-	const button2 = Button('Current Staff Only', 'currentOnlyButton', removeOld);
-	const button3 = Button('Faces to Name', 'playModeButton', playModeChanger);
-	const button4 = Button('Keep Score', 'keepScoreButton', scoreKeeper);
-	const gameDiv = document.createElement('div');
-	gameDiv.id = 'gameDivID';
+	const featureRow = document.createElement('div');
+	const toggleOnOffButton = Button('Begin', 'togglePlayButton', togglePlay);
+	const toggleCurrentEmpButton = Button('Current Staff Only', 'currentOnlyButton', toggleEmployeeList);
+	const toggleModeButton = Button('Faces to Name', 'playModeButton', toggleMode);
+	const toggleScoreButton = Button('Keep Score', 'toggleScoreButton', toggleScore);
+	const gameSpace = document.createElement('div');
+	const scoreSpace = document.createElement('div');
 
-	el.id = 'container';
-
-	headline.innerText = 'What Was Your Name? Wait, Wait, Don\'t Tell Me!';
+	containerElement.id = 'container';
 	headline.classList.add('headline');
+	headline.innerText = 'What Was Your Name? Wait, Wait, Don\'t Tell Me!';
+	featureRow.classList.add('featureBar');
+	gameSpace.id = 'gameDivID';
+	scoreSpace.id = 'scoreDivID';
 
-	el.appendChild(headline);
-	buttonDiv.appendChild(button2);
-	buttonDiv.appendChild(button3);
-	buttonDiv.appendChild(button4);
-	el.appendChild(buttonDiv);
-	el.appendChild(button1);
-	el.appendChild(gameDiv);
-	if (ScoreDisplay.keepScore) {
-		el.appendChild(ScoreDisplay.getScoreDisplay());
-	}
-	return el;
+
+	containerElement.appendChild(headline);
+	featureRow.appendChild(toggleCurrentEmpButton);
+	featureRow.appendChild(toggleModeButton);
+	featureRow.appendChild(toggleScoreButton);
+	containerElement.appendChild(featureRow);
+	containerElement.appendChild(toggleOnOffButton);
+	containerElement.appendChild(gameSpace);
+	containerElement.appendChild(scoreSpace);
+	return containerElement;
 };
-export default Container();
+export default Container;

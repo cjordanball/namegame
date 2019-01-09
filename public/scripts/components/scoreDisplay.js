@@ -5,6 +5,7 @@ export const ScoreDisplay = {
 		total: 0,
 		current: 0
 	},
+	allowScore: true,
 	// a method to take the two score values and update the display;
 	updateScoreDisplay() {
 		document.getElementById('currentScore').innerText = this.scoreData.current;
@@ -50,4 +51,25 @@ export const ScoreDisplay = {
 	toggleScoreKeeping() {
 		this.keepScore = !this.keepScore;
 	}
-}
+};
+
+export const toggleScore = () => {
+	if (!ScoreDisplay.allowScore) {
+		return;
+	}
+	const scoreButton = document.getElementById('toggleScoreButton');
+	const container = document.getElementById('container');
+	ScoreDisplay.keepScore = !ScoreDisplay.keepScore;
+	if (ScoreDisplay.keepScore) {
+		scoreButton.innerText = 'Turn Off Score';
+		container.appendChild(ScoreDisplay.getScoreDisplay());
+	} else {
+		const scoreDisplay = document.getElementById('scoreDisplay');
+		scoreButton.innerText = 'Keep Score';
+		container.removeChild(scoreDisplay);
+		Object.assign(ScoreDisplay.scoreData, {
+			total: 0,
+			current: 0
+		});
+	}
+};

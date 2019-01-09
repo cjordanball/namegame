@@ -1,3 +1,5 @@
+import { employees, choose5 } from '../helpers.js';
+
 const Employee = (employee) => {
 	const containDiv = document.createElement('div');
 	const tipSpan = document.createElement('span');
@@ -17,5 +19,9 @@ const Employee = (employee) => {
 
 	return containDiv;
 };
+
+export const getChosen = () => choose5(employees.length)
+	.map(num => employees[num])
+	.filter(employee => (employee.firstName && employee.lastName && employee.slug && employee.headshot.url));
 
 export default Employee;
