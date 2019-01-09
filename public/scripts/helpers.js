@@ -8,6 +8,7 @@ const willowTreeURL = 'https://willowtreeapps.com/api/v1.0/profiles/';
 const getEmployeeData = () => {
 	// the following can be uncommented to use the JSON data from a local file
 	employees.push(...data.people);
+	// uncomment the following lines to hit WillowTree for employee data
 	// fetch(willowTreeURL)
 	// 	.then(res => res.json())
 	// 	.then((jsonRes) => {
@@ -18,9 +19,9 @@ const getEmployeeData = () => {
 	// 	});
 };
 
-export const choose10 = (arrLength) => {
+export const choose5 = (arrLength) => {
 	const resArray = [];
-	while (resArray.length < 10) {
+	while (resArray.length < 5) {
 		const newEntry = Math.floor(Math.random() * arrLength);
 		if (!resArray.includes(newEntry)) {
 			resArray.push(newEntry);
