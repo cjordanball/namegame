@@ -1,3 +1,5 @@
+import { setupEl, removeNode } from '../helpers.js';
+
 export const ScoreDisplay = {
 
 	keepScore: false,
@@ -8,35 +10,20 @@ export const ScoreDisplay = {
 	allowScore: true,
 	// a method to take the two score values and update the display;
 	updateScoreDisplay() {
-		document.getElementById('currentScore').innerText = this.scoreData.current;
-		document.getElementById('totalScore').innerText = this.scoreData.total;
+		if (this.keepScore) {
+			document.getElementById('currentScore').innerText = this.scoreData.current;
+			document.getElementById('totalScore').innerText = this.scoreData.total;
+		}
 	},
 	// returns the empty display element for the score
 	getScoreDisplay() {
-		const scoreDisplay = document.createElement('div');
-		const currentScore = document.createElement('div');
-		const totalScore = document.createElement('div');
-		const currentScoreHeading = document.createElement('p');
-		const totalScoreHeading = document.createElement('p');
-		const currentScoreBox = document.createElement('div');
-		const totalScoreBox = document.createElement('div');
-
-		scoreDisplay.id = 'scoreDisplay';
-
-		currentScore.classList.add('scoreSections');
-		totalScore.classList.add('scoreSections');
-
-		currentScoreHeading.classList.add('scoreHeading');
-		totalScoreHeading.classList.add('scoreHeading');
-		totalScoreHeading.innerText = 'Cumulative Score';
-		currentScoreHeading.innerText = 'Points Remaining This Game';
-
-		currentScoreBox.classList.add('scoreBox');
-		currentScoreBox.id = 'currentScore';
-		currentScoreBox.innerText = this.scoreData.current;
-		totalScoreBox.classList.add('totalScoreBox');
-		totalScoreBox.id = 'totalScore';
-		totalScoreBox.innerText = this.scoreData.total;
+		const scoreDisplay = setupEl('div', 'scoreDisplay');
+		const currentScore = setupEl('div', null, 'scoreSections');
+		const totalScore = setupEl('div', null, 'scoreSections');
+		const currentScoreHeading = setupEl('p', null, 'scoreHeading', 'Points Remaining This Game');
+		const totalScoreHeading = setupEl('p', null, 'scoreHeading', 'Cumulative Score');
+		const currentScoreBox = setupEl('div', 'currentScore', 'scoreBox', this.scoreData.current);
+		const totalScoreBox = setupEl('div', 'totalScore', 'totalScoreBox', this.scoreData.total);
 
 		currentScore.appendChild(currentScoreHeading);
 		currentScore.appendChild(currentScoreBox);
@@ -47,13 +34,36 @@ export const ScoreDisplay = {
 
 		return scoreDisplay;
 	},
+
 	//
 	toggleScoreKeeping() {
 		this.keepScore = !this.keepScore;
 	}
 };
 
+export const tallySuccess = () => {
+	if (ScoreDisplay.keepScore) {
+		console.log('tallyHo');
+		ScoreDisplay.scoreData.total += ScoreDisplay.scoreData.current;
+		ScoreDisplay.scoreData.current = 0;
+		ScoreDisplay.updateScoreDisplay();
+	}
+};
+
+export const tallyFailure = () => {
+	if (ScoreDisplay.keepScore && ScoreDisplay.scoreData.current > 0) {
+		ScoreDisplay.scoreData.current--;
+	}
+};
+
+
+export const removeScoreDisplay = () => {
+	const scoreDisplay = document.getElementById('scoreDisplay');
+	removeNode(scoreDisplay);
+};
+
 export const toggleScore = () => {
+	console.log('toggleScore!');
 	if (!ScoreDisplay.allowScore) {
 		return;
 	}

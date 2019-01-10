@@ -1,14 +1,12 @@
-import Button from './button.js';
-import { employees } from '../helpers.js';
-// import EmployeeContainer from './employeeContainer.js';
+import { employees, setupEl, removeNode } from '../helpers.js';
 import { getChosen } from './employee.js';
-// import { employeeData } from '../../services/employeeService.js';
-// import InputForm from './inputForm.js';
-import { ScoreDisplay, toggleScore } from './scoreDisplay.js';
+import InputForm, { removeHintDisplay } from './inputForm.js';
+import {
+	ScoreDisplay, toggleScore, tallySuccess, tallyFailure, removeScoreDisplay
+} from './scoreDisplay.js';
 import Farewell from './farewell.js';
 import FacesGameBoard from './facesGameBoard.js';
 import NamesGameBoard from './namesGameBoard.js';
-// import { gameData, gameFunctions } from './gameHelpers.js';
 
 let employeeSelectedList;
 const gameData = {
@@ -42,26 +40,31 @@ const toggleEmployeeList = () => {
 	gameData.allEmployees = !gameData.allEmployees;
 	allEmplButton.innerText = gameData.allEmployees ? 'Switch to Current Staff Only' : 'Switch to All Staff';
 	employeeSelectedList = gameData.allEmployees ? employees : employees.filter(employee => employee.jobTitle);
-	console.log('esl: ', employeeSelectedList);
+	console.log('employees: ', employeeSelectedList);
 };
 
 const quitGame = () => {
 	const playButton = document.getElementById('togglePlayButton');
 	const gameDiv = document.getElementById('gameDivID');
 	playButton.innerText = 'Play Again';
+	removeScoreDisplay();
+	removeHintDisplay();
 	gameDiv.replaceChild(Farewell(), gameDiv.children[0]);
-	console.log('duck');
+
 };
 
 const facesCallBack = (selectedEmployee, e) => {
+	if (!e.target.dataset.info) {
+		return;
+	}
 	const chosenData = JSON.parse(e.target.dataset.info);
-	console.log('e: ', chosenData);
-	console.log('selEmp: ', selectedEmployee);
 	if (chosenData.id === selectedEmployee.id) {
-		console.log('hit');
 		Array.from(document.querySelectorAll('img'))
 			.forEach(pic => pic.classList.add('clickedFail'));
-	// 					e.target.classList.remove('clickedFail');
+		e.target.classList.remove('clickedFail');
+		tallySuccess()
+		const hintInputForm = InputForm('hintInputForm', chosenData.hint, hintSubmit);
+		document.getElementById('container').appendChild(hintInputForm);
 	// 					if (ScoreDisplay.keepScore) {
 	// 						ScoreDisplay.scoreData.total += ScoreDisplay.scoreData.current;
 	// 						ScoreDisplay.scoreData.current = 0;
@@ -70,8 +73,9 @@ const facesCallBack = (selectedEmployee, e) => {
 	// 					const hintInputForm = InputForm('hintInputForm', chosenData.hint, hintSubmit);
 	// 					el.appendChild(hintInputForm);
 	} else {
-		console.log('missed!');
 		e.target.classList.add('clickedFail');
+		tallyFailure();
+		ScoreDisplay.updateScoreDisplay();
 	// 					if (ScoreDisplay.keepScore) {
 	// 						ScoreDisplay.scoreData.current = Math.max(0, --ScoreDisplay.scoreData.current);
 	// 						ScoreDisplay.updateScoreDisplay();
@@ -81,7 +85,6 @@ const facesCallBack = (selectedEmployee, e) => {
 };
 
 const togglePlay = () => {
-	console.log('begin');
 	gameData.gameStarted = !gameData.gameStarted;
 	const playButton = document.getElementById('togglePlayButton');
 	const gameDiv = document.getElementById('gameDivID');
@@ -89,9 +92,8 @@ const togglePlay = () => {
 	document.getElementById('currentOnlyButton').classList.toggle('faded');
 	if (gameData.gameStarted) {
 		const chosen = getChosen();
-		playButton.innerText = 'Quit';
+		playButton.innerText = 'Quit This Game';
 		const gameBoard = gameData.mode === 'faces' ? FacesGameBoard(chosen, facesCallBack) : NamesGameBoard(chosen);
-		// gameBoard.id = 'gameBoard';
 		if (gameDiv.children.length) {
 			gameDiv.replaceChild(gameBoard, gameDiv.children[0]);
 		} else {
@@ -100,37 +102,20 @@ const togglePlay = () => {
 	} else {
 		quitGame();
 	}
-
-
-	// 	if (gameDiv.children.length) {
-	// 		gameDiv.replaceChild(faceBoard, gameDiv.children[0]);
-	// 	} else {
-	// 		gameDiv.appendChild(gameBoard);
-	// 	}
-	// 	playButton.innerText = 'Quit';
-	// } else {
-	// 	console.log('id: ', gameDiv.children);
-	// 	playButton.innerText = 'Begin';
-	// 	gameDiv.replaceChild(Farewell(), gameDiv.children[0]);
-	// }
-	// gameHelpers.toggleOnOff();
-	// const chosenFew = getChosen();
-	// const gameBoard = document.getElementById('gameDivID');
-	// if (gameData.mode === 'faces') {
-	// 	gameBoard.appendChild(FacesGameBoard(chosenFew));
-	// } else if (gameData.mode === 'names') {
-	// 	document.getElementById('keepScoreButton').classList.add('faded');
-	// 	gameBoard.appendChild(NamesGameBoard(chosenFew));
 };
 
-
-
-
+const continuePlay = () => {
+	const gameDiv = document.getElementById('gameDivID');
+	const chosen = getChosen();
+	const gameBoard = FacesGameBoard(chosen, facesCallBack);
+	gameDiv.replaceChild(gameBoard, gameDiv.children[0]);
+	ScoreDisplay.scoreData.current = 5;
+	ScoreDisplay.updateScoreDisplay();
+};
 
 // Object.assign(gameHelpers, {
 // 	// this function sets up the game, and defines what happens when the play button is pressed.
 // 	beginPlay(proceed = false) {
-// 		console.log('begin');
 // 		gameData.gameStarted = true;
 // 		document.getElementById('playModeButton').classList.add('faded');
 // 		document.getElementById('currentOnlyButton').classList.add('faded');
@@ -146,10 +131,8 @@ const togglePlay = () => {
 
 	// },
 	// quitPlay() {
-	// 	console.log('QUIT!');
 	// },
 	// toggleOnOff() {
-	// 	console.log('toggling');
 	// 	if (gameData.gameStarted) {
 	// 		el.replaceChild(document.getElementById('togglePlayButton'), buttonOff);
 	// 	} else {
@@ -165,7 +148,6 @@ const togglePlay = () => {
 	// 	document.getElementById('playModeButton').innerText = gameData.mode === 'faces' ? 'Faces to Name' : 'Names to Face';
 	// },
 	// scoreKeeper() {
-	// 	console.log('scoreKeeper');
 	// 	if (gameData.gameCompleted || gameData.mode === 'names') {
 // 			return;
 // 		}
@@ -201,21 +183,20 @@ const togglePlay = () => {
 
 
 // hintSubmit checks the string typed in by the user into the mnemonic hint input box
-// const hintSubmit = (selectedEmployee) => {
-// 	console.log(employees);
-// 	console.log('SE: ', selectedEmployee);
-// 	const inputField = document.querySelector('input');
-// 	const pattern = /[^\w'.,?!\x20]/;
-// 	if (pattern.test(inputField.value)) {
-// 		inputField.value = '';
-// 		window.alert('Sorry, the hint may contain only letters, numbers, commas, apostrophes and ending punctuation.  Please enter a new hint.');
-// 		return;
-// 	}
-// 	selectedEmployee.hint = inputField.value;
-// 	inputField.value = '';
-// 	beginPlay(true);
-// };
+const hintSubmit = (selectedEmployee) => {
+	const inputField = document.querySelector('input');
+	removeNode(inputField.parentNode);
+	const pattern = /[^\w'.,?!\x20]/;
+	if (pattern.test(inputField.value)) {
+		inputField.value = '';
+		window.alert('Sorry, the hint may contain only letters, numbers, commas, apostrophes and ending punctuation.  Please enter a new hint.');
+		return;
+	}
+	selectedEmployee.hint = inputField.value;
+	inputField.value = '';
 
+	continuePlay();
+};
 
 
 
@@ -351,32 +332,25 @@ const togglePlay = () => {
 
 
 const Container = () => {
-	const containerElement = document.createElement('div');
-	const headline = document.createElement('h1');
-	const featureRow = document.createElement('div');
-	const toggleOnOffButton = Button('Begin', 'togglePlayButton', togglePlay);
-	const toggleCurrentEmpButton = Button('Current Staff Only', 'currentOnlyButton', toggleEmployeeList);
-	const toggleModeButton = Button('Faces to Name', 'playModeButton', toggleMode);
-	const toggleScoreButton = Button('Keep Score', 'toggleScoreButton', toggleScore);
-	const gameSpace = document.createElement('div');
-	const scoreSpace = document.createElement('div');
-
-	containerElement.id = 'container';
-	headline.classList.add('headline');
-	headline.innerText = 'What Was Your Name? Wait, Wait, Don\'t Tell Me!';
-	featureRow.classList.add('featureBar');
-	gameSpace.id = 'gameDivID';
-	scoreSpace.id = 'scoreDivID';
-
+	const containerElement = setupEl('div', 'container');
+	const headline = setupEl('h1', null, 'headline', 'What Was Your Name? Wait, Wait, Don\'t Tell Me!');
+	const featureRow = setupEl('div', null, 'featureBar');
+	const toggleOnOffButton = setupEl('button', 'togglePlayButton', 'button', 'Begin', 'click', togglePlay);
+	const toggleCurrentEmpButton = setupEl('button', 'currentOnlyButton', 'button', 'Current Staff Only', 'click', toggleEmployeeList);
+	const toggleModeButton = setupEl('button', 'playModeButton', 'button', 'Faces to Name', 'click', toggleMode);
+	const toggleScoreButton = setupEl('button', 'toggleScoreButton', 'button', 'Keep Score', 'click', toggleScore);
+	const gameSpace = setupEl('div', 'gameDivID');
+	const scoreSpace = setupEl('scoreDivID');
 
 	containerElement.appendChild(headline);
-	featureRow.appendChild(toggleCurrentEmpButton);
-	featureRow.appendChild(toggleModeButton);
-	featureRow.appendChild(toggleScoreButton);
 	containerElement.appendChild(featureRow);
 	containerElement.appendChild(toggleOnOffButton);
 	containerElement.appendChild(gameSpace);
 	containerElement.appendChild(scoreSpace);
+	featureRow.appendChild(toggleCurrentEmpButton);
+	featureRow.appendChild(toggleModeButton);
+	featureRow.appendChild(toggleScoreButton);
+
 	return containerElement;
 };
 export default Container;
