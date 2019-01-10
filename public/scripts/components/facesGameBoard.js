@@ -19,7 +19,7 @@ const FacesGameBoard = (chosen, cb) => {
 
 	facesGameDiv.appendChild(employeeContainer);
 	facesGameDiv.appendChild(inquiry);
-	facesGameDiv.addEventListener('click', cb);
+	facesGameDiv.addEventListener('click', cb.bind(this, selectedEmployee));
 
 	return facesGameDiv;
 };
