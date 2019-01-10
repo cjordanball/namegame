@@ -43,7 +43,6 @@ export const ScoreDisplay = {
 
 export const tallySuccess = () => {
 	if (ScoreDisplay.keepScore) {
-		console.log('tallyHo');
 		ScoreDisplay.scoreData.total += ScoreDisplay.scoreData.current;
 		ScoreDisplay.scoreData.current = 0;
 		ScoreDisplay.updateScoreDisplay();
@@ -63,7 +62,6 @@ export const removeScoreDisplay = () => {
 };
 
 export const toggleScore = () => {
-	console.log('toggleScore!');
 	if (!ScoreDisplay.allowScore) {
 		return;
 	}

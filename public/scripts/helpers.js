@@ -1,5 +1,4 @@
 export const employees = [];
-
 // uncomment the following line if using local JSON data
 import data from '../data.js';
 
@@ -41,16 +40,25 @@ export const choose5 = (arrLength) => {
 	const resArray = [];
 	while (resArray.length < 5) {
 		const newEntry = Math.floor(Math.random() * arrLength);
-		if (!resArray.includes(newEntry)) {
-			resArray.push(newEntry);
+		if (!resArray.includes(newEntry)
+			&& employees[newEntry].firstName
+			&& employees[newEntry].lastName
+			&& employees[newEntry].slug
+			&& employees[newEntry].headshot.alt !== 'Logo'
+			&& employees[newEntry].headshot.url
+			&& employees[newEntry].headshot.alt.slice(0, 6) !== 'Willow'
+		) {
+			resArray.push(employees[newEntry]);
 		}
 	}
 	return resArray;
 };
 
 export const removeNode = (node) => {
-	const parent = node.parentNode;
-	parent.removeChild(node);
+	if (node) {
+		const parent = node.parentNode;
+		parent.removeChild(node);
+	}
 };
 
 export default getEmployeeData;

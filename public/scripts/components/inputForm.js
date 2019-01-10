@@ -15,8 +15,4 @@ const InputForm = (id, value, cb) => {
 	return form;
 };
 
-export const removeHintDisplay = () => {
-	console.log('Hint!');
-};
-
 export default InputForm;
