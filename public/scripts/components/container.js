@@ -45,18 +45,39 @@ const toggleEmployeeList = () => {
 	console.log('esl: ', employeeSelectedList);
 };
 
-const tester = 1224;
-
-const callBack = () => {
-	console.log(tester);
-};
-
 const quitGame = () => {
 	const playButton = document.getElementById('togglePlayButton');
 	const gameDiv = document.getElementById('gameDivID');
 	playButton.innerText = 'Play Again';
 	gameDiv.replaceChild(Farewell(), gameDiv.children[0]);
 	console.log('duck');
+};
+
+const facesCallBack = (selectedEmployee, e) => {
+	const chosenData = JSON.parse(e.target.dataset.info);
+	console.log('e: ', chosenData);
+	console.log('selEmp: ', selectedEmployee);
+	if (chosenData.id === selectedEmployee.id) {
+		console.log('hit');
+		Array.from(document.querySelectorAll('img'))
+			.forEach(pic => pic.classList.add('clickedFail'));
+	// 					e.target.classList.remove('clickedFail');
+	// 					if (ScoreDisplay.keepScore) {
+	// 						ScoreDisplay.scoreData.total += ScoreDisplay.scoreData.current;
+	// 						ScoreDisplay.scoreData.current = 0;
+	// 						ScoreDisplay.updateScoreDisplay()
+	// 					}
+	// 					const hintInputForm = InputForm('hintInputForm', chosenData.hint, hintSubmit);
+	// 					el.appendChild(hintInputForm);
+	} else {
+		console.log('missed!');
+		e.target.classList.add('clickedFail');
+	// 					if (ScoreDisplay.keepScore) {
+	// 						ScoreDisplay.scoreData.current = Math.max(0, --ScoreDisplay.scoreData.current);
+	// 						ScoreDisplay.updateScoreDisplay();
+	// 					}
+	}
+				// });
 };
 
 const togglePlay = () => {
@@ -69,7 +90,7 @@ const togglePlay = () => {
 	if (gameData.gameStarted) {
 		const chosen = getChosen();
 		playButton.innerText = 'Quit';
-		const gameBoard = gameData.mode === 'faces' ? FacesGameBoard(chosen, callBack) : NamesGameBoard(chosen);
+		const gameBoard = gameData.mode === 'faces' ? FacesGameBoard(chosen, facesCallBack) : NamesGameBoard(chosen);
 		// gameBoard.id = 'gameBoard';
 		if (gameDiv.children.length) {
 			gameDiv.replaceChild(gameBoard, gameDiv.children[0]);

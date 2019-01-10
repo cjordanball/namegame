@@ -8,7 +8,7 @@ import { employees } from '../helpers.js';
 const NamesGameBoard = (chosen) => {
 	const selectedEmployee = chosen[Math.floor(Math.random() * 5)]
 	const namesGameDiv = document.createElement('div');
-	// namesGameDiv.id = 'namesGameDiv';
+	namesGameDiv.id = 'namesGameDiv';
 	const employeeContainer = EmployeeContainer();
 	namesGameDiv.appendChild(Employee(selectedEmployee));
 
