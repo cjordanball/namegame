@@ -19,6 +19,24 @@ const getEmployeeData = () => {
 	// 	});
 };
 
+export const setupEl = (type = 'div', id, classes, content = '', event, cb) => {
+	const element = document.createElement(type);
+	const classArr = classes && (Array.isArray(classes) ? classes : [classes]);
+	if (id) {
+		element.id = id;
+	}
+	if (classArr) {
+		classArr.forEach((className) => {
+			element.classList.add(className);
+		});
+	}
+	element.innerText = content;
+	if (event) {
+		element.addEventListener(event, cb);
+	}
+	return element;
+};
+
 export const choose5 = (arrLength) => {
 	const resArray = [];
 	while (resArray.length < 5) {
@@ -28,6 +46,11 @@ export const choose5 = (arrLength) => {
 		}
 	}
 	return resArray;
+};
+
+export const removeNode = (node) => {
+	const parent = node.parentNode;
+	parent.removeChild(node);
 };
 
 export default getEmployeeData;

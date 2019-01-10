@@ -14,7 +14,7 @@ const Farewell = () => {
 	}
 	section.id = 'farewellDiv';
 	headline.innerText = `Great Job! You scored ${ScoreDisplay.scoreData.total} Points!!`;
-	textContent.innerText = `Way to go, and good job keeping track of your progress. We hope that you come back and try again, and accumulate even more than the ${scoreData.total} points you earned this time.`;
+	textContent.innerText = `Way to go, and good job keeping track of your progress. We hope that you come back and try again, and accumulate even more than the ${ScoreDisplay.scoreData.total} points you earned this time.`;
 	section.appendChild(headline);
 	section.appendChild(textContent);
 	return section;
