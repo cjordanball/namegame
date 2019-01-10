@@ -1,5 +1,7 @@
+import { setupEl } from '../helpers.js';
+
 const EmployeeContainer = () => {
-	const el = document.createElement('div');
+	const el = setupEl('div');
 	return el;
 };
 

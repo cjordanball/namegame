@@ -7,8 +7,14 @@
         "no-console": ["error", allow: ["log"]],
         "import/extensions": ["error", {"js": "ignorePackages"}],
         "no-plusplus": ["off", { "allowForLoopAfterthoughts": true}],
-        "max-len": ["error", { "code": 150 }]
-        },
+        "max-len": ["error", { "code": 150 }],
+        "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["selectedEmployee"] }],
+        "no-alert": "off",
+        "object-curly-newline": ["error", {
+            "ObjectExpression": "always",
+            "ImportDeclaration": "never"
+        }]
+    },
     "globals": {
         "document": false,
         "window": false,
