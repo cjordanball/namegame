@@ -7,7 +7,7 @@ import { getChosen } from './employee.js';
 import { ScoreDisplay, toggleScore } from './scoreDisplay.js';
 import Farewell from './farewell.js';
 import FacesGameBoard from './facesGameBoard.js';
-// import NamesGameBoard from './namesGameBoard.js';
+import NamesGameBoard from './namesGameBoard.js';
 // import { gameData, gameFunctions } from './gameHelpers.js';
 
 let employeeSelectedList;
@@ -45,27 +45,53 @@ const toggleEmployeeList = () => {
 	console.log('esl: ', employeeSelectedList);
 };
 
+const tester = 1224;
+
+const callBack = () => {
+	console.log(tester);
+};
+
+const quitGame = () => {
+	const playButton = document.getElementById('togglePlayButton');
+	const gameDiv = document.getElementById('gameDivID');
+	playButton.innerText = 'Play Again';
+	gameDiv.replaceChild(Farewell(), gameDiv.children[0]);
+	console.log('duck');
+};
+
 const togglePlay = () => {
 	console.log('begin');
 	gameData.gameStarted = !gameData.gameStarted;
-	const chosen = getChosen();
 	const playButton = document.getElementById('togglePlayButton');
 	const gameDiv = document.getElementById('gameDivID');
-	const faceBoard = FacesGameBoard(chosen);
 	document.getElementById('playModeButton').classList.toggle('faded');
 	document.getElementById('currentOnlyButton').classList.toggle('faded');
 	if (gameData.gameStarted) {
-		if (gameDiv.children.length) {
-			gameDiv.replaceChild(faceBoard, gameDiv.children[0]);
-		} else {
-			gameDiv.appendChild(faceBoard);
-		}
+		const chosen = getChosen();
 		playButton.innerText = 'Quit';
+		const gameBoard = gameData.mode === 'faces' ? FacesGameBoard(chosen, callBack) : NamesGameBoard(chosen);
+		// gameBoard.id = 'gameBoard';
+		if (gameDiv.children.length) {
+			gameDiv.replaceChild(gameBoard, gameDiv.children[0]);
+		} else {
+			gameDiv.appendChild(gameBoard);
+		}
 	} else {
-		console.log('id: ', gameDiv.children);
-		playButton.innerText = 'Begin';
-		gameDiv.replaceChild(Farewell(), gameDiv.children[0]);
+		quitGame();
 	}
+
+
+	// 	if (gameDiv.children.length) {
+	// 		gameDiv.replaceChild(faceBoard, gameDiv.children[0]);
+	// 	} else {
+	// 		gameDiv.appendChild(gameBoard);
+	// 	}
+	// 	playButton.innerText = 'Quit';
+	// } else {
+	// 	console.log('id: ', gameDiv.children);
+	// 	playButton.innerText = 'Begin';
+	// 	gameDiv.replaceChild(Farewell(), gameDiv.children[0]);
+	// }
 	// gameHelpers.toggleOnOff();
 	// const chosenFew = getChosen();
 	// const gameBoard = document.getElementById('gameDivID');

@@ -5,7 +5,7 @@ import EmployeeContainer from './employeeContainer.js';
 // import { employees } from '../helpers.js';
 
 
-const FacesGameBoard = (chosen) => {
+const FacesGameBoard = (chosen, cb) => {
 	const selectedEmployee = chosen[Math.floor(Math.random() * 5)];
 	const facesGameDiv = document.createElement('div');
 	facesGameDiv.id = 'facesGameDiv';
@@ -19,6 +19,7 @@ const FacesGameBoard = (chosen) => {
 
 	facesGameDiv.appendChild(employeeContainer);
 	facesGameDiv.appendChild(inquiry);
+	facesGameDiv.addEventListener('click', cb);
 
 	return facesGameDiv;
 };
