@@ -37,7 +37,6 @@ const toggleEmployeeList = () => {
 	gameData.allEmployees = !gameData.allEmployees;
 	allEmplButton.innerText = gameData.allEmployees ? 'Switch to Current Staff Only' : 'Switch to All Staff';
 	employeeSelectedList = gameData.allEmployees ? employees : employees.filter(employee => employee.jobTitle);
-	console.log('employees: ', employeeSelectedList);
 };
 
 const quitGame = () => {
@@ -75,7 +74,12 @@ const facesCallBack = (selectedEmployee, e) => {
 };
 
 const namesCallBack = (selectedEmployee, e) => {
-	console.log(selectedEmployee);
+	const chosenData = JSON.parse(e.target.dataset.info);
+	if (chosenData.id === selectedEmployee.id) {
+		continuePlay();
+	} else {
+		e.target.classList.add('red');
+	}
 };
 
 const togglePlay = () => {
@@ -102,7 +106,9 @@ const togglePlay = () => {
 const continuePlay = () => {
 	const gameDiv = document.getElementById('gameDivID');
 	const chosen = choose5(employeeSelectedList.length);
-	const gameBoard = FacesGameBoard(chosen, facesCallBack);
+	const gameBoard = gameData.mode === 'faces'
+		? FacesGameBoard(chosen, facesCallBack)
+		: NamesGameBoard(chosen, namesCallBack);
 	gameDiv.replaceChild(gameBoard, gameDiv.children[0]);
 	ScoreDisplay.scoreData.current = 5;
 	ScoreDisplay.updateScoreDisplay();
@@ -111,14 +117,12 @@ const continuePlay = () => {
 // hintSubmit checks the string typed in by the user into the mnemonic hint input box
 const hintSubmit = (selectedEmployee) => {
 	const inputField = document.querySelector('input');
-	console.log('inField: ', inputField.value);
 	const pattern = /[^\w'.,?!\x20]/;
 	if (pattern.test(inputField.value)) {
 		inputField.value = '';
 		window.alert('Sorry, the hint may contain only letters, numbers, commas, apostrophes and ending punctuation.  Please enter a new hint.');
 		return;
 	}
-	console.log(selectedEmployee);
 	selectedEmployee.hint = inputField.value;
 	inputField.value = '';
 	removeNode(inputField.parentNode);
